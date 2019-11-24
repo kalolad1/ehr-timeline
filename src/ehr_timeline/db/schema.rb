@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_12_215733) do
+ActiveRecord::Schema.define(version: 2019_11_12_222201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "events", force: :cascade do |t|
-    t.integer "type"
+    t.integer "event_type"
     t.datetime "created_at"
     t.integer "patient_id"
     t.integer "provider_id"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_215733) do
 
   create_table "providers", force: :cascade do |t|
     t.string "name"
-    t.integer "type"
+    t.integer "provider_type"
   end
 
 end
