@@ -43,10 +43,7 @@ $marker-size: 9px;
 /* Colors */
 
 $steps: #46b8e9;
-$colors: #d63031,
-#ff7675,
-#0984e3,
-#74b9ff;
+$colors: #74b9ff, #0984e3, #ff7675, #d63031;
 $timeline: #bdbdbd;
 
 /* Sizes */
@@ -274,12 +271,6 @@ body {
       &--step#{$i} {
         $color: nth($colors, ((($i - 1) % 4) + 1));
         background-color: $color;
-
-        $card-width: nth($width-sizes, ((($i - 1) % 4) + 1));
-        max-width: $card-width;
-
-        $card-height: nth($height-sizes, ((($i - 1) % 4) + 1));
-        height: $card-height;
 
         .head::after {
           border-color: $color;

@@ -3,10 +3,8 @@ class Event < ApplicationRecord
   belongs_to :provider
   enum event_type: {'routine physical': 0, visit: 1, surgery: 2, vaccination: 3, lab: 4}
 
-  def self.generate_random_events(with_default)
-    if with_default
-      return self.get_default_events
-    end
+  def self.generate_random_events
+    return nil
   end
 
   def self.get_default_events
@@ -70,6 +68,12 @@ class Event < ApplicationRecord
               dropped dangerously low. His doctor ordered some blood work.
               Lucky for him, he has enough platelets to give this
               presentation.')
+
+    event_one.save
+    event_two.save
+    event_three.save
+    event_four.save
+    event_five.save
     return [event_one, event_two, event_three, event_four, event_five]
   end
 
@@ -82,7 +86,43 @@ class Event < ApplicationRecord
   end
 
   def get_priority
-    rand(4) + 1
+    priorities = [
+        self.calc_event_type_priority,
+        self.calc_symptom_priority,
+        self.calc_procedure_priority,
+        self.calc_prescription_priority,
+    ]
+    priorities.sum
+  end
+
+  def calc_event_type_priority
+      if self.event_type == 'routine physical'
+        return 1
+      end
+      if self.event_type == 'vaccination'
+        return 1
+      end
+      if self.event_type == 'surgery'
+        return 4
+      end
+      if self.event_type == 'lab'
+        return 1
+      end
+      if self.event_type == 'visit'
+        return 1
+      end
+  end
+
+  def calc_symptom_priority
+    0
+  end
+
+  def calc_procedure_priority
+    0
+  end
+
+  def calc_prescription_priority
+    0
   end
 
 end
