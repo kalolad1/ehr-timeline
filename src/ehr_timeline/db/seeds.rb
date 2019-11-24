@@ -31,6 +31,39 @@ providers = Provider.create(
     {name: 'Skylar', provider_type: 'lab technician'},
   ]
 )
-
-
-
+prescriptions = Prescription.create(
+    [
+        {name: 'levothyroxine', priority: 0},
+        {name: 'rosuvastatin', priority: 1},
+        {name: 'albuterol', priority: 2},
+        {name: 'esomeprazole', priority: 0},
+        {name: 'fluticasone', priority: 1},
+        {name: 'insulin glargine', priority: 2},
+        {name: 'lisdexamfetamine', priority: 0},
+        {name: 'pregabalin', priority: 1},
+    ]
+)
+symptoms = Symptom.create(
+    [
+        {name: 'chills', priority: 0},
+        {name: 'fever', priority: 1},
+        {name: 'headache', priority: 2},
+        {name: 'swelling', priority: 0},
+        {name: 'inflammation', priority: 1},
+        {name: 'nose bleed', priority: 2},
+        {name: 'coughing', priority: 0},
+        {name: 'stuffy nose', priority: 1},
+    ]
+)
+procedures = Symptom.create(
+    [
+        {name: 'lumbar puncture', priority: 1},
+        {name: 'ppd test', priority: 2},
+        {name: 'blood test', priority: 3},
+        {name: 'appendix removal', priority: 1},
+        {name: 'eye exam', priority: 2},
+        {name: 'vaccination', priority: 3},
+        {name: 'biopsy', priority: 1},
+        {name: 'c section', priority: 2},
+    ]
+)
