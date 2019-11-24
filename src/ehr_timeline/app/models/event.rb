@@ -136,15 +136,27 @@ class Event < ApplicationRecord
   end
 
   def calc_symptom_priority
-    0
+    priority = 0
+    self.symptoms.each do |symptom|
+      priority += symptom.priority
+    end
+    return priority
   end
 
   def calc_procedure_priority
-    0
+    priority = 0
+    self.procedures.each do |procedure|
+      priority += procedure.priority
+    end
+    return priority
   end
 
   def calc_prescription_priority
-    0
+    priority = 0
+    self.prescriptions.each do |prescription|
+      priority += prescription.priority
+    end
+    return priority
   end
 
 end
