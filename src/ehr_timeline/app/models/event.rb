@@ -1,7 +1,17 @@
 class Event < ApplicationRecord
   belongs_to :patient
   belongs_to :provider
-  enum event_type: {'routine physical': 0, visit: 1, surgery: 2, vaccination: 3, lab: 4}
+  enum event_type: {
+      'routine physical': 0,
+      'visit': 1,
+      'surgery': 2,
+      'vaccination': 3,
+      'lab': 4
+  }
+
+  has_many :symptoms
+  has_many :procedures
+  has_many :prescriptions
 
   def self.generate_random_events
     return nil
@@ -10,19 +20,23 @@ class Event < ApplicationRecord
   def self.get_default_events
     patient = Patient.new
     patient.name = 'Darshan Kalola'
+    patient.save
 
     provider_one = Provider.new(
         name: 'Alexander Fleming',
         provider_type: 'physician')
+    provider_one.save
 
     provider_two = Provider.new(
         name: 'Hippocrates',
         provider_type: 'physician'
     )
+    provider_two.save
 
     provider_three = Provider.new(
         name: 'William Osler',
         provider_type: 'physician')
+    provider_three.save
 
     event_one = Event.new(
         patient: patient,
@@ -91,26 +105,34 @@ class Event < ApplicationRecord
         self.calc_symptom_priority,
         self.calc_procedure_priority,
         self.calc_prescription_priority,
+        self.calc_provider_priority,
     ]
-    priorities.sum
+    priority = priorities.sum
+    if priority > 4
+      priority = 4
+    end
+    return priority
   end
 
   def calc_event_type_priority
       if self.event_type == 'routine physical'
         return 1
-      end
-      if self.event_type == 'vaccination'
+      elsif self.event_type == 'vaccination'
         return 1
-      end
-      if self.event_type == 'surgery'
+      elsif self.event_type == 'surgery'
         return 4
-      end
-      if self.event_type == 'lab'
+      elsif self.event_type == 'lab'
+        return 1
+      elsif self.event_type == 'visit'
         return 1
       end
-      if self.event_type == 'visit'
-        return 1
-      end
+  end
+
+  def calc_provider_priority
+    if self.provider.provider_type == 'physician'
+      return 1
+    end
+    return 0
   end
 
   def calc_symptom_priority
