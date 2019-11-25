@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  MIN_PRIORITY = 1
+  MAX_PRIORITY = 4
   belongs_to :patient
   belongs_to :provider
   enum event_type: {
@@ -22,6 +24,7 @@ class Event < ApplicationRecord
         event = self.generate_random_event
         event.patient = patient
         events.push(event)
+        event.save
     end
     return events
   end
@@ -34,6 +37,7 @@ class Event < ApplicationRecord
     event.provider = Provider.find(provider_ids.sample)
     event.event_type = self.event_types[event_types.keys.sample]
     event.created_at = rand(20.years).seconds.ago
+    event.is_included = true
 
     event.symptoms = Symptom.generate_random_symptoms
     event.procedures = Procedure.generate_random_procedures

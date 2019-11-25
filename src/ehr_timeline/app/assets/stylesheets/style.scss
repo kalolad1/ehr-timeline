@@ -46,9 +46,6 @@ $steps: #46b8e9;
 $colors: #74b9ff, #0984e3, #ff7675, #d63031;
 $timeline: #bdbdbd;
 
-/* Sizes */
-$width-sizes: 450px, 450px, 450px, 450px;
-$height-sizes: 200px, 200px, 200px, 200px;
 
 /* Calculations */
 
@@ -283,4 +280,20 @@ body {
 .generate-events-btn {
   margin-left: 20px;
   margin-bottom: 20px;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+
+
+.filter {
+  padding: 10px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #2E2F30;
+  border-radius: 10px;
+  width: 40%;
 }

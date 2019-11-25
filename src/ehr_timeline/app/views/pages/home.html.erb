@@ -3,48 +3,58 @@
   <br><br>
   <div class="demo-card-wrapper">
     <% @events.each do |event| %>
-      <div class="demo-card demo-card--step<%= event.get_priority %>">
-        <div class="head">
-          <div class="number-box">
-            <span><%= event.get_year %></span>
+      <% if event.is_included %>
+        <div class="demo-card demo-card--step<%= event.get_priority %>">
+          <div class="head">
+            <div class="number-box">
+              <span><%= event.get_year %></span>
+            </div>
+            <h2><span class="small"><i><%= event.get_month_and_date %></i></span>
+              <strong><%= event.event_type %></strong></h2>
           </div>
-          <h2><span class="small"><i><%= event.get_month_and_date %></i></span> <strong><%= event.event_type %></strong></h2>
+          <div class="body">
+            <p><%= event.to_s %></p>
+          </div>
         </div>
-        <div class="body">
-          <p><%= event.to_s %></p>
+      <% else %>
+        <div class="demo-card demo-card--step<%= event.get_priority %>">
+          <div class="head">
+            <div class="number-box">
+              <span><del><%= event.get_year %></del></span>
+            </div>
+            <h2><span class="small"><i><del><%= event.get_month_and_date %></del></i></span>
+              <del><strong><%= event.event_type %></strong></del></h2>
+          </div>
+          <div class="body">
+            <p><del><%= event.to_s %></del></p>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
   </div>
 </section>
 
 <%= form_tag filter_events_path do %>
-  <% Event.event_types.each do |event_type| %>
-    <%= check_box_tag event_type[0], 'yes', id: event_type[0] %> <%= event_type[0] %>
-  <% end %>
-  <%= submit_tag("Filter") %>
+<div class="filter-container">
+  <div class="filter">
+    <h3>Filter by event type</h3>
+      <% Event.event_types.each_with_index do |event_type, index| %>
+        <%= check_box_tag event_type[0], 'yes', @event_type_filter_values[index], id: event_type[0] %> <%= event_type[0] %>
+      <% end %>
+      <br>
+      <br>
+      <%= submit_tag("Filter") %>
+  </div>
+  <div class="filter">
+    <h3>Filter by priority </h3>
+      <% (1..4).each_with_index do |i, index| %>
+        <%= check_box_tag i.to_s, 'yes', @priority_filter_values[index], id: i %> <%= i %>
+      <% end %>
+      <br>
+      <br>
+      <%= submit_tag("Filter") %>
+  </div>
+</div>
 <% end %>
-
-<%#= form_tag(filter_events_path, :method => "get") do %>
-  <%# @events.first.event_types.each do |event_type| %>
-<!--    <h3><%#= event_type %>:</h3>-->
-    <%#= content_tag :input, event_type, name: event_type, type: 'radio', value: 1 %>
-    <%#= content_tag :input, ' Not Here', name: raw( "answers[#{ student.id }]" ), type: 'radio', value: 0 %>
-<!--    <br>-->
-<!--    <br>-->
-  <%# end %>
-<!--  <br>-->
-<!--  <br>-->
-<!--  <br>-->
-<!--  <br>-->
-  <%#= submit_tag("Begin Ride") %>
-<%# end %>
-
-<!--<form action="/action_page.php">-->
-<!--  <input type="checkbox" name="vehicle1" value="Bike"> I have a bike<br>-->
-<!--  <input type="checkbox" name="vehicle2" value="Car"> I have a car<br>-->
-<!--  <input type="checkbox" name="vehicle3" value="Boat" checked> I have a boat<br><br>-->
-<!--  <input type="submit" value="Submit">-->
-<!--</form>-->
 
 <%= link_to 'Generate random events', generate_random_events_path, :class => "btn btn-outline-primary generate-events-btn" %>
