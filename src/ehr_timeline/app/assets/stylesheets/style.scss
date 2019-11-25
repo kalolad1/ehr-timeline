@@ -1,3 +1,5 @@
+/* Adapted from https://codepen.io/paulhbarker/pen/apvGdv/ */
+
 @mixin mq-xs {
   @media (min-width: 320px) {
     @content;
