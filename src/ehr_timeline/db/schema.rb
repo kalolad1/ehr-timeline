@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(version: 2019_11_24_221818) do
     t.integer "patient_id"
     t.integer "provider_id"
     t.string "note"
-    t.integer "normalized_priority"
   end
 
   create_table "patients", force: :cascade do |t|

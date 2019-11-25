@@ -14,81 +14,31 @@ class Event < ApplicationRecord
   has_many :prescriptions
 
   def self.generate_random_events
-    return nil
+    n = 10
+    events = []
+    patient_ids = Patient.pluck(:id)
+    patient = Patient.find(patient_ids.sample)
+    (0...n).each do |i|
+        event = self.generate_random_event
+        event.patient = patient
+        events.push(event)
+    end
+    return events
   end
 
-  def self.get_default_events
-    patient = Patient.new
-    patient.name = 'Darshan Kalola'
-    patient.save
+  def self.generate_random_event
+    event = Event.new
 
-    provider_one = Provider.new(
-        name: 'Alexander Fleming',
-        provider_type: 'physician')
-    provider_one.save
+    provider_ids = Provider.pluck(:id)
 
-    provider_two = Provider.new(
-        name: 'Hippocrates',
-        provider_type: 'physician'
-    )
-    provider_two.save
+    event.provider = Provider.find(provider_ids.sample)
+    event.event_type = self.event_types[event_types.keys.sample]
+    event.created_at = rand(20.years).seconds.ago
 
-    provider_three = Provider.new(
-        name: 'William Osler',
-        provider_type: 'physician')
-    provider_three.save
-
-    event_one = Event.new(
-        patient: patient,
-        provider: provider_one,
-        event_type: "vaccination",
-        created_at: "1998-04-15 00:00:00",
-        note: "On this day, baby Darshan received 5 painful vaccinations. He
-              cried profusely.")
-
-    event_two = Event.new(
-        patient: patient,
-        provider: provider_two,
-        event_type: "routine physical",
-        created_at: "2001-02-12 00:00:00",
-        note: "Young boul Darshan went to the doctor's for a routine physical.
-              All was well.")
-
-    event_three = Event.new(
-        patient: patient,
-        provider: provider_three,
-        event_type: "surgery",
-        created_at: "2004-12-25 00:00:00",
-        note: "On the blessed day of Christmas, poor Darshan had surgery. His
-               appendix was removed, much to his dismay. He loved that thing
-               like it was his kidney.")
-
-    event_four = Event.new(
-        patient: patient,
-        provider: provider_one,
-        event_type: 'visit',
-        created_at: '2016-10-31 00:00:00',
-        note: "After ingesting 2lbs of chocolate, Darshan makes a trip to the
-              doctor's office. The physician prescribes antibiotics, because he
-              trusts the US Research and Development sector more than he trusts
-              the bacteria's ability to become resistant.")
-
-    event_five = Event.new(
-        patient: patient,
-        provider: provider_two,
-        event_type: 'lab',
-        created_at: '2019-11-25 00:00:00',
-        note: 'Darshan worked so hard on the OSS project that his platelet count
-              dropped dangerously low. His doctor ordered some blood work.
-              Lucky for him, he has enough platelets to give this
-              presentation.')
-
-    event_one.save
-    event_two.save
-    event_three.save
-    event_four.save
-    event_five.save
-    return [event_one, event_two, event_three, event_four, event_five]
+    event.symptoms = Symptom.generate_random_symptoms
+    event.procedures = Procedure.generate_random_procedures
+    event.prescriptions = Prescription.generate_random_prescriptions
+    return event
   end
 
   def get_month_and_date
@@ -107,9 +57,12 @@ class Event < ApplicationRecord
         self.calc_prescription_priority,
         self.calc_provider_priority,
     ]
-    priority = priorities.sum
+    priority = priorities.sum / 2
+
     if priority > 4
       priority = 4
+    elsif priority < 1
+      priority = 1
     end
     return priority
   end
@@ -136,6 +89,10 @@ class Event < ApplicationRecord
   end
 
   def calc_symptom_priority
+    if self.symptoms.blank?
+      return 0
+    end
+
     priority = 0
     self.symptoms.each do |symptom|
       priority += symptom.priority
@@ -144,6 +101,10 @@ class Event < ApplicationRecord
   end
 
   def calc_procedure_priority
+    if self.procedures.blank?
+      return 0
+    end
+
     priority = 0
     self.procedures.each do |procedure|
       priority += procedure.priority
@@ -152,6 +113,10 @@ class Event < ApplicationRecord
   end
 
   def calc_prescription_priority
+    if self.prescriptions.blank?
+      return 0
+    end
+
     priority = 0
     self.prescriptions.each do |prescription|
       priority += prescription.priority
@@ -159,4 +124,55 @@ class Event < ApplicationRecord
     return priority
   end
 
+  def self.order_by_occurrence(events)
+    events = events.sort_by {
+      |event| event.created_at.to_i
+    }.reverse!
+    return events
+  end
+
+  def to_s
+    event_note = ""
+    event_note += "On " + self.get_month_and_date + ", " + self.get_year + ",
+                  " + self.patient.name + " met with " +
+                  self.provider.name + ". "
+    event_note += "The event was of type " + self.event_type + ". "
+    if self.symptoms.present?
+      event_note += "The symptoms recorded were: "
+      self.symptoms.each_with_index do |symptom, index|
+        if index == 0
+          event_note += symptom.name
+        else
+          event_note += ", " + symptom.name
+        end
+      end
+      event_note += ". "
+    end
+
+    if self.procedures.present?
+      event_note += "The procedures done were: "
+      self.procedures.each_with_index do |procedure, index|
+        if index == 0
+          event_note += procedure.name
+        else
+          event_note += ", " + procedure.name
+        end
+      end
+      event_note += ". "
+    end
+
+    if self.prescriptions.present?
+      event_note += "The prescriptions given were: "
+      self.prescriptions.each_with_index do |prescription, index|
+        if index == 0
+          event_note += prescription.name
+        else
+          event_note += ", " + prescription.name
+        end
+      end
+      event_note += ". "
+    end
+
+    return event_note
+  end
 end

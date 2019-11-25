@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 # Seed of patients
-patients = Patient.create(
+patients = Patient.create!(
     [
         {name: 'Darshan'},
         {name: 'Bob'},
@@ -18,7 +18,7 @@ patients = Patient.create(
         {name: 'Charlotte'},
     ]
 )
-providers = Provider.create(
+providers = Provider.create!(
 [
     {name: 'Alexander', provider_type: 'physician'},
     {name: 'Liam', provider_type: 'physician'},
@@ -31,7 +31,7 @@ providers = Provider.create(
     {name: 'Skylar', provider_type: 'lab technician'},
   ]
 )
-prescriptions = Prescription.create(
+prescriptions = Prescription.create!(
     [
         {name: 'levothyroxine', priority: 0},
         {name: 'rosuvastatin', priority: 1},
@@ -43,7 +43,7 @@ prescriptions = Prescription.create(
         {name: 'pregabalin', priority: 1},
     ]
 )
-symptoms = Symptom.create(
+symptoms = Symptom.create!(
     [
         {name: 'chills', priority: 0},
         {name: 'fever', priority: 1},
@@ -55,7 +55,7 @@ symptoms = Symptom.create(
         {name: 'stuffy nose', priority: 1},
     ]
 )
-procedures = Symptom.create(
+procedures = Procedure.create!(
     [
         {name: 'lumbar puncture', priority: 1},
         {name: 'ppd test', priority: 2},

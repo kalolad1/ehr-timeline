@@ -1,8 +1,8 @@
 <section id=timeline>
-  <h1>Darshan Kalola</h1>
+  <h1><%= @events.first.patient.name %></h1>
   <br><br>
   <div class="demo-card-wrapper">
-    <% @events.reverse.each do |event| %>
+    <% @events.each do |event| %>
       <div class="demo-card demo-card--step<%= event.get_priority %>">
         <div class="head">
           <div class="number-box">
@@ -11,78 +11,40 @@
           <h2><span class="small"><i><%= event.get_month_and_date %></i></span> <strong><%= event.event_type %></strong></h2>
         </div>
         <div class="body">
-          <p><%= event.note %></p>
+          <p><%= event.to_s %></p>
         </div>
       </div>
     <% end %>
-
-    <!--    <div class="demo-card demo-card--step1">-->
-    <!--      <div class="head">-->
-    <!--        <div class="number-box">-->
-    <!--          <span>2019</span>-->
-    <!--        </div>-->
-    <!--        <h2><span class="small"><i>November 25th</i></span> <strong>Lab</strong></h2>-->
-    <!--      </div>-->
-    <!--      <div class="body">-->
-    <!--        <p>Darshan worked so hard on the OSS project that his platelet count dropped dangerously low. His doctor ordered-->
-    <!--          some blood work. Lucky for him, he has enough platelets to give this presentation.-->
-    <!--        </p>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
-    <!--    <div class="demo-card demo-card--step2">-->
-    <!--      <div class="head">-->
-    <!--        <div class="number-box">-->
-    <!--          <span>2016</span>-->
-    <!--        </div>-->
-    <!--        <h2><span class="small"><i>October 31st</i></span> <strong>Visit</strong></h2>-->
-    <!--      </div>-->
-    <!--      <div class="body">-->
-    <!--        <p>After ingesting 2lbs of chocolate, Darshan makes a trip to the doctor's office. The physician prescribes-->
-    <!--        antibiotics, because he trusts the US Research and Development sector more than he trusts the bacteria's ability to become resistant.-->
-    <!--        </p>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
-    <!--    <div class="demo-card demo-card--step3">-->
-    <!--      <div class="head">-->
-    <!--        <div class="number-box">-->
-    <!--          <span>2004</span>-->
-    <!--        </div>-->
-    <!--        <h2><span class="small"><i>December 25th</i></span> <strong>Surgery</strong></h2>-->
-    <!--      </div>-->
-    <!--      <div class="body">-->
-    <!--        <p>On the blessed day of Christmas, poor Darshan had surgery. His appendix was removed, much to his-->
-    <!--          dismay. He loved that thing like it was his kidney.-->
-    <!--        </p>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
-    <!--    <div class="demo-card demo-card--step4">-->
-    <!--      <div class="head">-->
-    <!--        <div class="number-box">-->
-    <!--          <span>2001</span>-->
-    <!--        </div>-->
-    <!--        <h2><span class="small"><i>February 12th</i></span> <strong>Routine Physical</strong></h2>-->
-    <!--      </div>-->
-    <!--      <div class="body">-->
-    <!--        <p>Young boul Darshan went to the doctor's for a routine physical. All was well.</p>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
-    <!--    <div class="demo-card demo-card--step5">-->
-    <!--      <div class="head">-->
-    <!--        <div class="number-box">-->
-    <!--          <span>1998</span>-->
-    <!--        </div>-->
-    <!--        <h2><span class="small"><i>April 15th</i></span> <strong>Vaccination</strong></h2>-->
-    <!--      </div>-->
-    <!--      <div class="body">-->
-    <!--        <p>On this day, baby Darshan received 5 painful vaccinations. He cried profusely.</p>-->
-    <!--      </div>-->
-    <!--    </div>-->
   </div>
 </section>
 
+<%= form_tag filter_events_path do %>
+  <% Event.event_types.each do |event_type| %>
+    <%= check_box_tag event_type[0], 'yes', id: event_type[0] %> <%= event_type[0] %>
+  <% end %>
+  <%= submit_tag("Filter") %>
+<% end %>
+
+<%#= form_tag(filter_events_path, :method => "get") do %>
+  <%# @events.first.event_types.each do |event_type| %>
+<!--    <h3><%#= event_type %>:</h3>-->
+    <%#= content_tag :input, event_type, name: event_type, type: 'radio', value: 1 %>
+    <%#= content_tag :input, ' Not Here', name: raw( "answers[#{ student.id }]" ), type: 'radio', value: 0 %>
+<!--    <br>-->
+<!--    <br>-->
+  <%# end %>
+<!--  <br>-->
+<!--  <br>-->
+<!--  <br>-->
+<!--  <br>-->
+  <%#= submit_tag("Begin Ride") %>
+<%# end %>
+
+<!--<form action="/action_page.php">-->
+<!--  <input type="checkbox" name="vehicle1" value="Bike"> I have a bike<br>-->
+<!--  <input type="checkbox" name="vehicle2" value="Car"> I have a car<br>-->
+<!--  <input type="checkbox" name="vehicle3" value="Boat" checked> I have a boat<br><br>-->
+<!--  <input type="submit" value="Submit">-->
+<!--</form>-->
 
 <%= link_to 'Generate random events', generate_random_events_path, :class => "btn btn-outline-primary generate-events-btn" %>
