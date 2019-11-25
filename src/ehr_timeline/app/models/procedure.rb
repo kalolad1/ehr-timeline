@@ -6,6 +6,7 @@ class Procedure < ApplicationRecord
   end
 
   def self.generate_random_procedures
+    # Generates random procedures.
     n = rand(3)
     procedure_ids = Procedure.pluck(:id)
     procedures = []

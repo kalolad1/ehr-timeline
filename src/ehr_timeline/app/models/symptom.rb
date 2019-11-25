@@ -6,6 +6,7 @@ class Symptom < ApplicationRecord
   end
 
   def self.generate_random_symptoms
+    # Generate random symptoms.
     n = rand(3)
     symptom_ids = Symptom.pluck(:id)
     symptoms = []

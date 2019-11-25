@@ -1,6 +1,8 @@
 class Event < ApplicationRecord
+  # Stores min and max priority.
   MIN_PRIORITY = 1
   MAX_PRIORITY = 4
+
   belongs_to :patient
   belongs_to :provider
   enum event_type: {
@@ -16,6 +18,7 @@ class Event < ApplicationRecord
   has_many :prescriptions
 
   def self.generate_random_events
+    # Generates 10 random events.
     n = 10
     events = []
     patient_ids = Patient.pluck(:id)
@@ -30,6 +33,7 @@ class Event < ApplicationRecord
   end
 
   def self.generate_random_event
+    # Generates a random event from the seed values of the database.
     event = Event.new
 
     provider_ids = Provider.pluck(:id)
@@ -46,14 +50,18 @@ class Event < ApplicationRecord
   end
 
   def get_month_and_date
+    # Gets the month and date in human readable format.
     self.created_at.strftime("%B #{self.created_at.day.ordinalize}")
   end
 
   def get_year
+    # Gets the year in human readable format.
     self.created_at.strftime('%Y')
   end
 
   def get_priority
+    # Calculates the priority of the event by summing up sub events. Then it
+    # is divided by 2 and capped if it is too low or too high.
     priorities = [
         self.calc_event_type_priority,
         self.calc_symptom_priority,
@@ -72,6 +80,7 @@ class Event < ApplicationRecord
   end
 
   def calc_event_type_priority
+    # Returns the priority score based on which event type the event is.
       if self.event_type == 'routine physical'
         return 1
       elsif self.event_type == 'vaccination'
@@ -86,6 +95,7 @@ class Event < ApplicationRecord
   end
 
   def calc_provider_priority
+    # Determines the priority score based on the provider type.
     if self.provider.provider_type == 'physician'
       return 1
     end
@@ -93,6 +103,7 @@ class Event < ApplicationRecord
   end
 
   def calc_symptom_priority
+    # Calculates the cumulative priority of all the symptoms.
     if self.symptoms.blank?
       return 0
     end
@@ -105,6 +116,7 @@ class Event < ApplicationRecord
   end
 
   def calc_procedure_priority
+    # Calculates the cumulative priority of all the procedures.
     if self.procedures.blank?
       return 0
     end
@@ -117,6 +129,7 @@ class Event < ApplicationRecord
   end
 
   def calc_prescription_priority
+    # Calculates the cumulative priority of all the prescriptions.
     if self.prescriptions.blank?
       return 0
     end
@@ -129,6 +142,7 @@ class Event < ApplicationRecord
   end
 
   def self.order_by_occurrence(events)
+    # Sorts the events according to the date they were created.
     events = events.sort_by {
       |event| event.created_at.to_i
     }.reverse!
@@ -136,6 +150,8 @@ class Event < ApplicationRecord
   end
 
   def to_s
+    # Produces a human readable representation of the event, akin to a patient
+    # note.
     event_note = ""
     event_note += "On " + self.get_month_and_date + ", " + self.get_year + ",
                   " + self.patient.name + " met with " +
@@ -176,7 +192,6 @@ class Event < ApplicationRecord
       end
       event_note += ". "
     end
-
     return event_note
   end
 end

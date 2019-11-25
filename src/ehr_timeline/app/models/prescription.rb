@@ -6,6 +6,7 @@ class Prescription < ApplicationRecord
   end
 
   def self.generate_random_prescriptions
+    # Generates random prescriptions.
     n = rand(3)
     prescription_ids = Prescription.pluck(:id)
     prescriptions = []
